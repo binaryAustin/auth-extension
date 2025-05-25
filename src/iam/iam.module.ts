@@ -9,7 +9,8 @@ import { JwtModule } from '@nestjs/jwt';
 import jwtConfig from './config/jwt.config';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
-import { AccessTokenGuard } from './authentication/guards/access-token.guard';
+import { AccessTokenGuard } from './authentication/access-token.guard';
+import { AuthenticationGuard } from './authentication/authentication.guard';
 
 @Module({
   imports: [
@@ -22,11 +23,11 @@ import { AccessTokenGuard } from './authentication/guards/access-token.guard';
       provide: HashingService,
       useClass: BcryptService,
     },
-    // Protect all routes (we can exclude ones individually later)
     {
       provide: APP_GUARD,
-      useClass: AccessTokenGuard,
+      useClass: AuthenticationGuard,
     },
+    AccessTokenGuard,
     AuthenticationService,
   ],
   controllers: [AuthenticationController],
