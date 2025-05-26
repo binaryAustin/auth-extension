@@ -8,20 +8,23 @@ import {
   Delete,
 } from '@nestjs/common';
 import { CoffeesService } from './coffees.service';
-import { CreateCoffeeDto } from './dto/create-coffee.dto';
-import { UpdateCoffeeDto } from './dto/update-coffee.dto';
+import { CreateCoffeeDto } from './dtos/create-coffee.dto';
+import { UpdateCoffeeDto } from './dtos/update-coffee.dto';
 import { ActiveUser } from 'src/iam/decorators/active-user.decorator';
 import { UserInfoPayload } from 'src/iam/types/user-info-payload.type';
 import { Auth } from 'src/iam/authentication/auth.decorator';
 import { AuthType } from 'src/iam/enums/auth-type.enum';
 import { Roles } from 'src/iam/authorization/roles.decorator';
 import { Role } from 'src/users/enums/role.enum';
+import { Permissions } from 'src/iam/authorization/permissions.decorator';
+import { Permission } from 'src/iam/types/permission.type';
 
 @Controller('coffees')
 export class CoffeesController {
   constructor(private readonly coffeesService: CoffeesService) {}
 
-  @Roles(Role.Admin)
+  // @Roles(Role.Admin)
+  @Permissions(Permission.CreateCoffee)
   @Post()
   create(@Body() createCoffeeDto: CreateCoffeeDto) {
     return this.coffeesService.create(createCoffeeDto);

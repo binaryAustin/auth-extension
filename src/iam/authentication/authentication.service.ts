@@ -8,13 +8,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { HashingService } from '../hashing/hashing.service';
-import { SignUpDto } from '../dto/sign-up.dto';
-import { SignInDto } from '../dto/sign-in.dto';
+import { SignUpDto } from '../dtos/sign-up.dto';
+import { SignInDto } from '../dtos/sign-in.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigType } from '@nestjs/config';
 import jwtConfig from '../config/jwt.config';
 import { UserInfoPayload } from '../types/user-info-payload.type';
-import { RefreshTokenDto } from '../dto/refresh-token.dto';
+import { RefreshTokenDto } from '../dtos/refresh-token.dto';
 import {
   InvalidatedRefreshTokenError,
   RefreshTokenIdsStorage,
@@ -54,7 +54,7 @@ export class AuthenticationService {
       this.signToken<Partial<UserInfoPayload>>(
         user.id,
         this.jwtConfiguration.accessTokenTtl,
-        { email: user.email, role: user.role },
+        { email: user.email, role: user.role, permissions: user.permissions },
       ),
       this.signToken<Pick<RefreshTokenPayload, 'refreshTokenId'>>(
         user.id,
