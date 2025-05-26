@@ -14,7 +14,7 @@ import { ConfigModule } from '@nestjs/config';
     UsersModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: '172.28.5.1',
+      host: '172.28.5.10',
       port: 5432,
       username: 'postgres',
       password: 'postgres',

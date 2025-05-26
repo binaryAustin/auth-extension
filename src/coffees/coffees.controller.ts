@@ -6,13 +6,14 @@ import {
   Patch,
   Param,
   Delete,
-  Req,
 } from '@nestjs/common';
 import { CoffeesService } from './coffees.service';
 import { CreateCoffeeDto } from './dto/create-coffee.dto';
 import { UpdateCoffeeDto } from './dto/update-coffee.dto';
 import { ActiveUser } from 'src/iam/decorators/active-user.decorator';
-import { ActiveUserData } from 'src/iam/types/active-user-data.type';
+import { AccessTokenPayload } from 'src/iam/types/access-token-payload.type';
+import { Auth } from 'src/iam/authentication/auth.decorator';
+import { AuthType } from 'src/iam/enums/auth-type.enum';
 
 @Controller('coffees')
 export class CoffeesController {
@@ -24,7 +25,7 @@ export class CoffeesController {
   }
 
   @Get()
-  findAll(@ActiveUser() user: ActiveUserData) {
+  findAll(@ActiveUser() user: AccessTokenPayload) {
     console.log(user);
     return this.coffeesService.findAll();
   }

@@ -29,7 +29,7 @@ export class AccessTokenGuard implements CanActivate {
         this.jwtConfiguration,
       );
       request[REQUEST_USER_KEY] = payload;
-    } catch {
+    } catch (err) {
       throw new UnauthorizedException();
     }
     return true;
