@@ -1,5 +1,5 @@
-import { AccessTokenPayload } from './access-token-payload.type';
+import { UserInfoPayload } from './user-info-payload.type';
 
-export interface RefreshTokenPayload extends AccessTokenPayload {
+export interface RefreshTokenPayload extends UserInfoPayload {
   refreshTokenId: string;
 }

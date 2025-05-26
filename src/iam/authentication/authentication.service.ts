@@ -13,7 +13,7 @@ import { SignInDto } from '../dto/sign-in.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigType } from '@nestjs/config';
 import jwtConfig from '../config/jwt.config';
-import { AccessTokenPayload } from '../types/access-token-payload.type';
+import { UserInfoPayload } from '../types/user-info-payload.type';
 import { RefreshTokenDto } from '../dto/refresh-token.dto';
 import {
   InvalidatedRefreshTokenError,
@@ -51,10 +51,10 @@ export class AuthenticationService {
     const refreshTokenId = randomUUID();
 
     const [accessToken, refreshToken] = await Promise.all([
-      this.signToken<Partial<AccessTokenPayload>>(
+      this.signToken<Partial<UserInfoPayload>>(
         user.id,
         this.jwtConfiguration.accessTokenTtl,
-        { email: user.email },
+        { email: user.email, role: user.role },
       ),
       this.signToken<Pick<RefreshTokenPayload, 'refreshTokenId'>>(
         user.id,
