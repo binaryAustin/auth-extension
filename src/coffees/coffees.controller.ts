@@ -10,8 +10,8 @@ import {
 import { CoffeesService } from './coffees.service';
 import { CreateCoffeeDto } from './dtos/create-coffee.dto';
 import { UpdateCoffeeDto } from './dtos/update-coffee.dto';
-import { ActiveUser } from 'src/iam/decorators/active-user.decorator';
-import { CurrentUser } from 'src/iam/types/current-user.type';
+import { CurrentUser } from 'src/iam/decorators/active-user.decorator';
+import { CurrentUserInfo } from 'src/iam/types/current-user-info.type';
 import { Auth } from 'src/iam/authentication/decorators/auth.decorator';
 import { AuthType } from 'src/iam/authentication/enums/auth-type.enum';
 import { Roles } from 'src/iam/authorization/decorators/roles.decorator';
@@ -35,7 +35,7 @@ export class CoffeesController {
   }
 
   @Get()
-  findAll(@ActiveUser() user: CurrentUser) {
+  findAll(@CurrentUser() user: CurrentUserInfo) {
     console.log(user);
     return this.coffeesService.findAll();
   }

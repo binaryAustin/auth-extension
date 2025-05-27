@@ -13,7 +13,7 @@ import { SignInDto } from './dtos/sign-in.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigType } from '@nestjs/config';
 import jwtConfig from './configs/jwt.config';
-import { CurrentUser } from '../types/current-user.type';
+import { CurrentUserInfo } from '../types/current-user-info.type';
 import { RefreshTokenDto } from './dtos/refresh-token.dto';
 import {
   InvalidatedRefreshTokenError,
@@ -21,6 +21,7 @@ import {
 } from './refresh-token-ids.storage';
 import { randomUUID } from 'node:crypto';
 import { RefreshTokenPayload } from './types/refresh-token-payload.type';
+import { OtpAuthenticationService } from './otp-authentication.service';
 
 @Injectable()
 export class AuthenticationService {
@@ -31,6 +32,7 @@ export class AuthenticationService {
     @Inject(jwtConfig.KEY)
     private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
     private readonly refreshTokenIdsStorage: RefreshTokenIdsStorage,
+    private readonly otpAuthService: OtpAuthenticationService,
   ) {}
 
   public async signUp(signUpDto: SignUpDto) {
@@ -51,7 +53,7 @@ export class AuthenticationService {
     const refreshTokenId = randomUUID();
 
     const [accessToken, refreshToken] = await Promise.all([
-      this.signToken<Partial<CurrentUser>>(
+      this.signToken<Partial<CurrentUserInfo>>(
         user.id,
         this.jwtConfiguration.accessTokenTtl,
         { email: user.email, role: user.role, permissions: user.permissions },
@@ -81,6 +83,19 @@ export class AuthenticationService {
       user.password,
     );
     if (!isEqual) throw new UnauthorizedException('Password does not match');
+
+    // Check if TFA is enabled and the TFA code is valid
+    if (user.isTfaEnabled) {
+      if (!signInDto.tfaCode)
+        throw new UnauthorizedException('2FA code must be provided');
+
+      const isValid = this.otpAuthService.verifyCode(
+        signInDto.tfaCode,
+        user.tfaSecret,
+      );
+
+      if (!isValid) throw new UnauthorizedException('Invalid 2FA code');
+    }
 
     const tokens = await this.generateTokens(user);
 

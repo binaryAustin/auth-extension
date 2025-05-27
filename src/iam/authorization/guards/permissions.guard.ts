@@ -3,7 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { PermissionType } from '../types/permission.type';
 import { PERMISSIONS_KEY, REQUEST_USER_KEY } from '../../iam.constant';
-import { CurrentUser } from '../../types/current-user.type';
+import { CurrentUserInfo } from '../../types/current-user-info.type';
 
 @Injectable()
 export class PermissionsGuard implements CanActivate {
@@ -18,7 +18,7 @@ export class PermissionsGuard implements CanActivate {
 
     if (!contextPermissions) return true;
 
-    const user: CurrentUser = context.switchToHttp().getRequest()[
+    const user: CurrentUserInfo = context.switchToHttp().getRequest()[
       REQUEST_USER_KEY
     ];
 

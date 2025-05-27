@@ -11,7 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ApiKey } from 'src/users/api-keys/entities/api-key.entity';
 import { Repository } from 'typeorm';
 import { REQUEST_USER_KEY } from 'src/iam/iam.constant';
-import { CurrentUser } from 'src/iam/types/current-user.type';
+import { CurrentUserInfo } from 'src/iam/types/current-user-info.type';
 
 @Injectable()
 export class ApiKeyGuard implements CanActivate {
@@ -42,7 +42,7 @@ export class ApiKeyGuard implements CanActivate {
         email: apiKeyEntity.user.email,
         role: apiKeyEntity.user.role,
         permissions: apiKeyEntity.user.permissions,
-      } as CurrentUser;
+      } as CurrentUserInfo;
     } catch (err) {
       throw new UnauthorizedException();
     }

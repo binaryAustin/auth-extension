@@ -3,7 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { Role } from 'src/users/enums/role.enum';
 import { REQUEST_USER_KEY, ROLES_KEY } from '../../iam.constant';
-import { CurrentUser } from '../../types/current-user.type';
+import { CurrentUserInfo } from '../../types/current-user-info.type';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -19,7 +19,7 @@ export class RolesGuard implements CanActivate {
 
     if (!contextRoles) return true;
 
-    const user: CurrentUser = context.switchToHttp().getRequest()[
+    const user: CurrentUserInfo = context.switchToHttp().getRequest()[
       REQUEST_USER_KEY
     ];
 

@@ -1,5 +1,5 @@
-import { CurrentUser } from '../../types/current-user.type';
+import { CurrentUserInfo } from '../../types/current-user-info.type';
 
-export interface RefreshTokenPayload extends CurrentUser {
+export interface RefreshTokenPayload extends CurrentUserInfo {
   refreshTokenId: string;
 }

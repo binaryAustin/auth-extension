@@ -9,7 +9,7 @@ import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { Policy } from '../policies/types/policy.type';
 import { POLICIES_KEY, REQUEST_USER_KEY } from 'src/iam/iam.constant';
-import { CurrentUser } from 'src/iam/types/current-user.type';
+import { CurrentUserInfo } from 'src/iam/types/current-user-info.type';
 import { PolicyHandlerStorage } from '../policies/policy-handlers.storage';
 
 @Injectable()
@@ -27,7 +27,7 @@ export class PoliciesGuard implements CanActivate {
 
     if (!policies) return true;
 
-    const user: CurrentUser = context.switchToHttp().getRequest()[
+    const user: CurrentUserInfo = context.switchToHttp().getRequest()[
       REQUEST_USER_KEY
     ];
 
