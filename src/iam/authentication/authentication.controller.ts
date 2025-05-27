@@ -17,6 +17,8 @@ import { CurrentUserInfo } from '../types/current-user-info.type';
 import { Response } from 'express';
 import { OtpAuthenticationService } from './otp-authentication.service';
 import { toFileStream } from 'qrcode';
+import { GoogleAuthenticatonService } from './social/google-authenticaton.service';
+import { GoogleTokenDto } from './dtos/google-token.dto';
 
 @Auth(AuthType.None)
 @Controller('auth')
@@ -24,6 +26,7 @@ export class AuthenticationController {
   constructor(
     private readonly authService: AuthenticationService,
     private readonly othAuthService: OtpAuthenticationService,
+    private readonly googleAuthService: GoogleAuthenticatonService,
   ) {}
 
   @Post('sign-up')
@@ -59,5 +62,10 @@ export class AuthenticationController {
     response.type('png');
 
     return toFileStream(response, uri);
+  }
+
+  @Post('google')
+  async googleAuthenticate(@Body() tokenDto: GoogleTokenDto) {
+    return this.googleAuthService.authenticate(tokenDto.token);
   }
 }

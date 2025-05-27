@@ -21,6 +21,7 @@ import { ApiKeysService } from './authentication/api-keys.service';
 import { ApiKey } from 'src/users/api-keys/entities/api-key.entity';
 import { ApiKeyGuard } from './authentication/guards/api-key.guard';
 import { OtpAuthenticationService } from './authentication/otp-authentication.service';
+import { GoogleAuthenticatonService } from './authentication/social/google-authenticaton.service';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { OtpAuthenticationService } from './authentication/otp-authentication.se
     FrameworkContributorHandler,
     ApiKeysService,
     OtpAuthenticationService,
+    GoogleAuthenticatonService,
   ],
   controllers: [AuthenticationController],
 })

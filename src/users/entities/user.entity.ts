@@ -20,7 +20,7 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @Column()
+  @Column({ nullable: true })
   password: string;
 
   @Column({ enum: Role, default: Role.Regular })
@@ -31,6 +31,9 @@ export class User {
 
   @Column({ nullable: true })
   tfaSecret: string;
+
+  @Column({ nullable: true })
+  googleId: string;
 
   @Column({ enum: Permission, default: [], type: 'json' })
   permissions: PermissionType[];
