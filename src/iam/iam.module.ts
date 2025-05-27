@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { BcryptService } from './hashing/bcrypt.service';
 import { HashingService } from './hashing/hashing.service';
 import { AuthenticationController } from './authentication/authentication.controller';
@@ -22,6 +22,13 @@ import { ApiKey } from 'src/users/api-keys/entities/api-key.entity';
 import { ApiKeyGuard } from './authentication/guards/api-key.guard';
 import { OtpAuthenticationService } from './authentication/otp-authentication.service';
 import { GoogleAuthenticatonService } from './authentication/social/google-authenticaton.service';
+import { SessionAuthenticationService } from './authentication/session-authentication.service';
+import { SessionAuthenticationController } from './authentication/session-authentication.controller';
+import * as session from 'express-session';
+import * as passport from 'passport';
+import { UserSerializer } from './authentication/serializers/user-serializer';
+import { RedisStore } from 'connect-redis';
+import Redis from 'ioredis';
 
 @Module({
   imports: [
@@ -59,7 +66,28 @@ import { GoogleAuthenticatonService } from './authentication/social/google-authe
     ApiKeysService,
     OtpAuthenticationService,
     GoogleAuthenticatonService,
+    SessionAuthenticationService,
+    UserSerializer,
   ],
-  controllers: [AuthenticationController],
+  controllers: [AuthenticationController, SessionAuthenticationController],
 })
-export class IamModule {}
+export class IamModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(
+        session({
+          store: new RedisStore({ client: new Redis(6379, '172.28.5.11') }),
+          secret: process.env.SESSION_SECRET!,
+          resave: false,
+          saveUninitialized: false,
+          cookie: {
+            sameSite: true,
+            httpOnly: true,
+          },
+        }),
+        passport.initialize(),
+        passport.session(),
+      )
+      .forRoutes('*');
+  }
+}
