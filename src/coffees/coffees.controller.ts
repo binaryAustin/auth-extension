@@ -11,27 +11,30 @@ import { CoffeesService } from './coffees.service';
 import { CreateCoffeeDto } from './dtos/create-coffee.dto';
 import { UpdateCoffeeDto } from './dtos/update-coffee.dto';
 import { ActiveUser } from 'src/iam/decorators/active-user.decorator';
-import { UserInfoPayload } from 'src/iam/types/user-info-payload.type';
-import { Auth } from 'src/iam/authentication/auth.decorator';
-import { AuthType } from 'src/iam/enums/auth-type.enum';
-import { Roles } from 'src/iam/authorization/roles.decorator';
+import { CurrentUser } from 'src/iam/types/current-user.type';
+import { Auth } from 'src/iam/authentication/decorators/auth.decorator';
+import { AuthType } from 'src/iam/authentication/enums/auth-type.enum';
+import { Roles } from 'src/iam/authorization/decorators/roles.decorator';
 import { Role } from 'src/users/enums/role.enum';
-import { Permissions } from 'src/iam/authorization/permissions.decorator';
-import { Permission } from 'src/iam/types/permission.type';
+import { Permissions } from 'src/iam/authorization/decorators/permissions.decorator';
+import { Permission } from 'src/iam/authorization/types/permission.type';
+import { Policies } from 'src/iam/authorization/decorators/policies.decorator';
+import { FrameworkContributorPolicy } from 'src/iam/authorization/policies/framework-contributor.policy';
 
 @Controller('coffees')
 export class CoffeesController {
   constructor(private readonly coffeesService: CoffeesService) {}
 
+  @Policies(new FrameworkContributorPolicy())
   // @Roles(Role.Admin)
-  @Permissions(Permission.CreateCoffee)
+  // @Permissions(Permission.CreateCoffee)
   @Post()
   create(@Body() createCoffeeDto: CreateCoffeeDto) {
     return this.coffeesService.create(createCoffeeDto);
   }
 
   @Get()
-  findAll(@ActiveUser() user: UserInfoPayload) {
+  findAll(@ActiveUser() user: CurrentUser) {
     console.log(user);
     return this.coffeesService.findAll();
   }

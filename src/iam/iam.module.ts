@@ -6,14 +6,17 @@ import { AuthenticationService } from './authentication/authentication.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { JwtModule } from '@nestjs/jwt';
-import jwtConfig from './config/jwt.config';
+import jwtConfig from './authentication/configs/jwt.config';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
-import { AccessTokenGuard } from './authentication/access-token.guard';
-import { AuthenticationGuard } from './authentication/authentication.guard';
+import { AccessTokenGuard } from './authentication/guards/access-token.guard';
+import { AuthenticationGuard } from './authentication/guards/authentication.guard';
 import { RefreshTokenIdsStorage } from './authentication/refresh-token-ids.storage';
-import { RolesGuard } from './authorization/roles.guard';
-import { PermissionsGuard } from './authorization/permissions.guard';
+import { RolesGuard } from './authorization/guards/roles.guard';
+import { PermissionsGuard } from './authorization/guards/permissions.guard';
+import { PolicyHandlerStorage } from './authorization/policies/policy-handlers.storage';
+import { FrameworkContributorHandler } from './authorization/policies/framework-contributor.handler';
+import { PoliciesGuard } from './authorization/guards/policies.guard';
 
 @Module({
   imports: [
@@ -34,13 +37,19 @@ import { PermissionsGuard } from './authorization/permissions.guard';
     //   provide: APP_GUARD,
     //   useClass: RolesGuard,
     // },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: PermissionsGuard,
+    // },
     {
       provide: APP_GUARD,
-      useClass: PermissionsGuard,
+      useClass: PoliciesGuard,
     },
     AccessTokenGuard,
     RefreshTokenIdsStorage,
     AuthenticationService,
+    PolicyHandlerStorage,
+    FrameworkContributorHandler,
   ],
   controllers: [AuthenticationController],
 })

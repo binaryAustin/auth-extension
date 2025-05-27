@@ -1,6 +1,9 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { Role } from '../enums/role.enum';
-import { Permission, PermissionType } from 'src/iam/types/permission.type';
+import {
+  Permission,
+  PermissionType,
+} from 'src/iam/authorization/types/permission.type';
 
 @Entity('users')
 export class User {

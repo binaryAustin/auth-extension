@@ -1,10 +1,10 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
-import { SignUpDto } from '../dtos/sign-up.dto';
-import { SignInDto } from '../dtos/sign-in.dto';
-import { Auth } from './auth.decorator';
-import { AuthType } from '../enums/auth-type.enum';
-import { RefreshTokenDto } from '../dtos/refresh-token.dto';
+import { SignUpDto } from './dtos/sign-up.dto';
+import { SignInDto } from './dtos/sign-in.dto';
+import { Auth } from './decorators/auth.decorator';
+import { AuthType } from './enums/auth-type.enum';
+import { RefreshTokenDto } from './dtos/refresh-token.dto';
 
 @Auth(AuthType.None)
 @Controller('auth')

@@ -1,7 +1,7 @@
 import { Role } from 'src/users/enums/role.enum';
-import { PermissionType } from './permission.type';
+import { PermissionType } from '../authorization/types/permission.type';
 
-export interface UserInfoPayload {
+export interface CurrentUser {
   sub: number;
   email: string;
   role: Role;

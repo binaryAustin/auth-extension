@@ -2,8 +2,8 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { PermissionType } from '../types/permission.type';
-import { PERMISSIONS_KEY, REQUEST_USER_KEY } from '../iam.constant';
-import { UserInfoPayload } from '../types/user-info-payload.type';
+import { PERMISSIONS_KEY, REQUEST_USER_KEY } from '../../iam.constant';
+import { CurrentUser } from '../../types/current-user.type';
 
 @Injectable()
 export class PermissionsGuard implements CanActivate {
@@ -18,7 +18,7 @@ export class PermissionsGuard implements CanActivate {
 
     if (!contextPermissions) return true;
 
-    const user: UserInfoPayload = context.switchToHttp().getRequest()[
+    const user: CurrentUser = context.switchToHttp().getRequest()[
       REQUEST_USER_KEY
     ];
 

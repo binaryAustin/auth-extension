@@ -8,19 +8,19 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { HashingService } from '../hashing/hashing.service';
-import { SignUpDto } from '../dtos/sign-up.dto';
-import { SignInDto } from '../dtos/sign-in.dto';
+import { SignUpDto } from './dtos/sign-up.dto';
+import { SignInDto } from './dtos/sign-in.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigType } from '@nestjs/config';
-import jwtConfig from '../config/jwt.config';
-import { UserInfoPayload } from '../types/user-info-payload.type';
-import { RefreshTokenDto } from '../dtos/refresh-token.dto';
+import jwtConfig from './configs/jwt.config';
+import { CurrentUser } from '../types/current-user.type';
+import { RefreshTokenDto } from './dtos/refresh-token.dto';
 import {
   InvalidatedRefreshTokenError,
   RefreshTokenIdsStorage,
 } from './refresh-token-ids.storage';
 import { randomUUID } from 'node:crypto';
-import { RefreshTokenPayload } from '../types/refresh-token-payload.type';
+import { RefreshTokenPayload } from './types/refresh-token-payload.type';
 
 @Injectable()
 export class AuthenticationService {
@@ -51,7 +51,7 @@ export class AuthenticationService {
     const refreshTokenId = randomUUID();
 
     const [accessToken, refreshToken] = await Promise.all([
-      this.signToken<Partial<UserInfoPayload>>(
+      this.signToken<Partial<CurrentUser>>(
         user.id,
         this.jwtConfiguration.accessTokenTtl,
         { email: user.email, role: user.role, permissions: user.permissions },
