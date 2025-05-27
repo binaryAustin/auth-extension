@@ -21,6 +21,7 @@ import { Permission } from 'src/iam/authorization/types/permission.type';
 import { Policies } from 'src/iam/authorization/decorators/policies.decorator';
 import { FrameworkContributorPolicy } from 'src/iam/authorization/policies/framework-contributor.policy';
 
+@Auth(AuthType.Bearer, AuthType.ApiKey)
 @Controller('coffees')
 export class CoffeesController {
   constructor(private readonly coffeesService: CoffeesService) {}

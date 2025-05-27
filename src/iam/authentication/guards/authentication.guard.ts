@@ -8,6 +8,7 @@ import { Reflector } from '@nestjs/core';
 import { AccessTokenGuard } from './access-token.guard';
 import { AuthType } from '../enums/auth-type.enum';
 import { AUTH_TYPE_KEY } from 'src/iam/iam.constant';
+import { ApiKeyGuard } from './api-key.guard';
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {
@@ -16,6 +17,7 @@ export class AuthenticationGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
     private readonly accessTokenGuard: AccessTokenGuard,
+    private readonly apiKeyGuard: ApiKeyGuard,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -44,6 +46,7 @@ export class AuthenticationGuard implements CanActivate {
 
   getAuthTypeGuardMap(): Record<AuthType, CanActivate | CanActivate[]> {
     return {
+      [AuthType.ApiKey]: this.apiKeyGuard,
       [AuthType.Bearer]: this.accessTokenGuard,
       [AuthType.None]: { canActivate: () => true },
     };
